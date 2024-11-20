@@ -1,12 +1,10 @@
-import React from 'react';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import api from '../api';
 import { FoodLocal } from '../interfaces/foodLocal';
 import { Box, Card, CardContent, CardMedia, Grid, IconButton, Typography, Alert, Backdrop, 
-    Button, Dialog, DialogActions, DialogContent, Snackbar, SnackbarCloseReason, Switch } from '@mui/material';
+    Button, Dialog, DialogActions, DialogContent, Snackbar, SnackbarCloseReason, Switch, CircularProgress } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import NoPhotoIcon from "../../public/NoPhotoIcon"
-import { CircularProgress } from "@mui/material";
 import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded';
 import { StoreHasFood } from '../interfaces/StoreHasFood';
 import { StoreProfile } from '../interfaces/StoreProfile';
@@ -19,8 +17,7 @@ const StoreCatalogue: React.FC<{ isAppBarVisible: boolean, canEditCatalogue:bool
     const [catalogue, setCatalogue] = useState<StoreHasFood[]>([])
     const [selectedFood, setSelectedFood] = useState<FoodLocal|null>(null)
     const [store, setStore] = useState<StoreProfile | null>(null)
-    const [foodsFiltered, setFoodsFiltered] = useState<FoodLocal[]>([])
-    const currentStoreId = window.localStorage.s_id
+    // const [foodsFiltered, setFoodsFiltered] = useState<FoodLocal[]>([])
     const [showDeleteDialog, setShowDeleteDialog] = useState(false)
     const [isUpdating, setIsUpdating] = useState(false)
     const [allDone, setAllDone] = useState(false)
@@ -66,11 +63,11 @@ const StoreCatalogue: React.FC<{ isAppBarVisible: boolean, canEditCatalogue:bool
                 })
     }, [store])
 
-    useEffect(()=>{
-        setTimeout(() => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }, 100); // Adjust the delay as needed
-    }, [foodsFiltered])
+    // useEffect(()=>{
+    //     setTimeout(() => {
+    //         window.scrollTo({ top: 0, behavior: 'smooth' });
+    //     }, 100); // Adjust the delay as needed
+    // }, [foodsFiltered])
 
     const handleFoodClick = (id:string) => {
         navigate("/food/" + id)

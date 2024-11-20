@@ -1,5 +1,4 @@
-import React from 'react';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import api from '../api';
 import { Box, Card, CardContent, IconButton, Typography, Button, Dialog, DialogActions, 
     DialogContent, SnackbarCloseReason, CardActions, DialogTitle } from '@mui/material';
@@ -23,8 +22,7 @@ const FoodStoreList: React.FC<{ isAppBarVisible: boolean }> = ({ isAppBarVisible
     const currentUserId = window.localStorage.id;
     const [storesFiltered, setStoresFiltered] = useState<StoreProfile[]>([])
     const [searchQuery, setSearchQuery] = useState("");
-    const [successOpen, setSuccessOpen] = useState(false)
-    const [allDone, setAllDone] = useState(false)
+    // const [allDone, setAllDone] = useState(false)
     const [storeStats, setStoreStats] = useState<{ 
         [storeId: string]: { 
             recommendationCount: number; 
@@ -107,9 +105,9 @@ const FoodStoreList: React.FC<{ isAppBarVisible: boolean }> = ({ isAppBarVisible
             .catch(error => {
                 console.error("Error fetching data:", error);
             })
-            .finally(() => {
-                setAllDone(true); // Set the flag after both requests have completed
-            });
+            // .finally(() => {
+            //     setAllDone(true); // Set the flag after both requests have completed
+            // });
         }
     }, [openList]);
 
@@ -168,19 +166,6 @@ const FoodStoreList: React.FC<{ isAppBarVisible: boolean }> = ({ isAppBarVisible
         }
     }, [comments])
 
-    const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchQuery(event.target.value);
-    };
-    const handleSuccessClose = (
-        event: React.SyntheticEvent | Event,
-        reason?: SnackbarCloseReason,
-      ) => {
-        if (reason === 'clickaway') {
-          return;
-        }
-    
-        setSuccessOpen(false);
-      }
     const handleOpenStore = (store: StoreProfile) => {
         setSelectedStore(store);
         const storeComments = comments.filter(comment => comment.storeId === store.userId);

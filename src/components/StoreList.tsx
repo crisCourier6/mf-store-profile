@@ -1,5 +1,4 @@
-import React from 'react';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import api from '../api';
 import { Box, Card, CardContent, Grid, IconButton, Typography, Button, InputAdornment, TextField, SnackbarCloseReason, CardActions } from '@mui/material';
 import { useParams } from 'react-router-dom';
@@ -22,7 +21,7 @@ const StoreList: React.FC<{ isAppBarVisible: boolean }> = ({ isAppBarVisible }) 
     const currentUserId = window.localStorage.id;
     const [storesFiltered, setStoresFiltered] = useState<StoreProfile[]>([])
     const [searchQuery, setSearchQuery] = useState("");
-    const [successOpen, setSuccessOpen] = useState(false)
+    // const [successOpen, setSuccessOpen] = useState(false)
     const [allDone, setAllDone] = useState(false)
     const [storeStats, setStoreStats] = useState<{ 
         [storeId: string]: { 
@@ -168,16 +167,16 @@ const StoreList: React.FC<{ isAppBarVisible: boolean }> = ({ isAppBarVisible }) 
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchQuery(event.target.value);
     };
-    const handleSuccessClose = (
-        event: React.SyntheticEvent | Event,
-        reason?: SnackbarCloseReason,
-      ) => {
-        if (reason === 'clickaway') {
-          return;
-        }
+    // const handleSuccessClose = (
+    //     event: React.SyntheticEvent | Event,
+    //     reason?: SnackbarCloseReason,
+    //   ) => {
+    //     if (reason === 'clickaway') {
+    //       return;
+    //     }
     
-        setSuccessOpen(false);
-      }
+    //     setSuccessOpen(false);
+    //   }
     const handleOpenStore = (store: StoreProfile) => {
         setSelectedStore(store);
         const storeComments = comments.filter(comment => comment.storeId === store.userId);
