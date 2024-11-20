@@ -1,6 +1,7 @@
 import React from 'react';
+import IconProps from "../interfaces/IconProps"
 
-function ScannerIcon({ width, height, fill="#425a6c" }) {
+const ScannerIcon: React.FC<IconProps> = ({ width = "100%", height = "100%", fill = "#425a6c" }) => {
   return (
 <svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1047 1047" width={width} height={height}>
 	<title>scanner</title>

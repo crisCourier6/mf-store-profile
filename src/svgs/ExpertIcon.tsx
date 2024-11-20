@@ -1,6 +1,7 @@
 import React from 'react';
+import IconProps from "../interfaces/IconProps"
 
-function ExpertIcon({ width, height, fill="#425a6c" }) {
+const ExpertIcon: React.FC<IconProps> = ({ width = "100%", height = "100%", fill = "#425a6c" }) => {
   return (
 <svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 692 692" width={width} height={height}>
 	<title>expert</title>
