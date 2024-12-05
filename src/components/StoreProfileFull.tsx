@@ -29,7 +29,8 @@ interface StoreProfileProps {
 const StoreProfileFull: React.FC<StoreProfileProps> = ({ store, comments, open, onClose, onUpdateComment, onDeleteComment, onNewComment, scrollToComments }) => {
     const navigate = useNavigate()
     const [localComments, setLocalComments] = useState<CommentStore[]>([]);
-    const currentUserId = window.localStorage.id
+    const token = window.sessionStorage.getItem("token") || window.localStorage.getItem("token")
+    const currentUserId = window.sessionStorage.getItem("id") || window.localStorage.getItem("id")
     const [showDeleteDialog, setShowDeleteDialog] = useState(false)
     const [showEditDialog, setShowEditDialog] = useState(false)
     const [selectedComment, setSelectedComment] = useState<CommentStore | null>(null);
@@ -70,7 +71,7 @@ const StoreProfileFull: React.FC<StoreProfileProps> = ({ store, comments, open, 
 
             api.patch(`${commentsURL}/${selectedComment.id}`, updatedComment, {
                 withCredentials: true,
-                headers: { Authorization: "Bearer " + window.localStorage.token },
+                headers: { Authorization: "Bearer " + token },
             })
                 .then(res => {
                     onUpdateComment(updatedComment)
@@ -90,7 +91,7 @@ const StoreProfileFull: React.FC<StoreProfileProps> = ({ store, comments, open, 
         if (selectedComment) {
             api.delete(`${commentsURL}/${selectedComment.id}`, {
                 withCredentials: true,
-                headers: { Authorization: "Bearer " + window.localStorage.token },
+                headers: { Authorization: "Bearer " + token },
             })
                 .then(res => {
                     onDeleteComment(selectedComment.id)
@@ -117,7 +118,7 @@ const StoreProfileFull: React.FC<StoreProfileProps> = ({ store, comments, open, 
         api.post(commentsURL, newComment, {
             withCredentials: true,
             headers: {
-                Authorization: "Bearer " + window.localStorage.token
+                Authorization: "Bearer " + token
             }
         }).then(res => {
             onNewComment(res.data);  // Call the parent's new comment function

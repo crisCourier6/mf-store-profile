@@ -18,7 +18,8 @@ const StoreList: React.FC<{ isAppBarVisible: boolean }> = ({ isAppBarVisible }) 
     const commentsURL = "/comments-store"
     const [stores, setStores] = useState<StoreProfile[]>([])
     const [comments, setComments] = useState<CommentStore[]>([])
-    const currentUserId = window.localStorage.id;
+    const token = window.sessionStorage.getItem("token") || window.localStorage.getItem("token")
+    const currentUserId = window.sessionStorage.getItem("id") || window.localStorage.getItem("id")
     const [storesFiltered, setStoresFiltered] = useState<StoreProfile[]>([])
     const [searchQuery, setSearchQuery] = useState("");
     // const [successOpen, setSuccessOpen] = useState(false)
@@ -47,14 +48,14 @@ const StoreList: React.FC<{ isAppBarVisible: boolean }> = ({ isAppBarVisible }) 
         const fetchStores = api.get(`${storesURL}${storesQueryParams}`, {
             withCredentials: true,
             headers: {
-                Authorization: "Bearer " + window.localStorage.token
+                Authorization: "Bearer " + token
             }
         });
     
         const fetchComments = api.get(`${commentsURL}${commentsQueryParams}`, {
             withCredentials: true,
             headers: {
-                Authorization: "Bearer " + window.localStorage.token
+                Authorization: "Bearer " + token
             }
         });
     

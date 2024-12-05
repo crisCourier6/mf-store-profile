@@ -9,7 +9,8 @@ const AddFoodToStore: React.FC= () => {
     const {id} = useParams()
     const storeHasFoodURL = "/catalogue"
     const [foodInCatalogue, setFoodInCatalogue] = useState(false)
-    const currentStoreId = window.localStorage.s_id
+    const token = window.sessionStorage.getItem("token") || window.localStorage.getItem("token")
+    const currentStoreId = window.sessionStorage.getItem("s_id") || window.localStorage.getItem("s_id")
     const [snackbarOpen, setSnackbarOpen] = useState(false)
     const [snackbarMsg, setSnackbarMsg] = useState("")
     const [allDone, setAllDone] = useState(false)
@@ -19,7 +20,7 @@ const AddFoodToStore: React.FC= () => {
         api.get(`${storeHasFoodURL}${queryParams}`, {
             withCredentials: true,
             headers: {
-                Authorization: "Bearer " + window.localStorage.token
+                Authorization: "Bearer " + token
             }
         })
         .then(res => {
@@ -47,6 +48,7 @@ const AddFoodToStore: React.FC= () => {
       }
 
     const onAddFood = () => {
+        setAllDone(false)
         if (!foodInCatalogue){
             let newFood = {
                 storeId: currentStoreId,
@@ -56,7 +58,7 @@ const AddFoodToStore: React.FC= () => {
             api.post(`${storeHasFoodURL}`, newFood, {
                 withCredentials: true,
                 headers: {
-                    Authorization: "Bearer " + window.localStorage.token
+                    Authorization: "Bearer " + token
                 }
             })
             .then((res) => {
@@ -68,13 +70,16 @@ const AddFoodToStore: React.FC= () => {
                 console.error(error);
                 setSnackbarOpen(true)
                 setSnackbarMsg(error.response.data.message)
-            });
+            })
+            .finally(()=>{
+                setAllDone(true)
+            })
         }
         else{
             api.delete(`${storeHasFoodURL}/bystoreandfood/${currentStoreId}/${id}`, {
                 withCredentials: true,
                 headers: {
-                    Authorization: "Bearer " + window.localStorage.token
+                    Authorization: "Bearer " + token
                 }
             })
             .then((res) => {
@@ -86,7 +91,10 @@ const AddFoodToStore: React.FC= () => {
                 console.error(error);
                 setSnackbarOpen(true)
                 setSnackbarMsg(error.response.data.message)
-            });
+            })
+            .finally(()=>{
+                setAllDone(true)
+            })
         }
         
     };
@@ -121,7 +129,7 @@ const AddFoodToStore: React.FC= () => {
                                 Agregar al catálogo
                             </Typography>
                         </>
-                    :<CircularProgress sx={{color: "warning.main"}}/>
+                    :<CircularProgress size={"small"} sx={{color: "warning.main"}}/>
                 }
                 
                 

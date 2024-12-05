@@ -14,6 +14,7 @@ const StoreCatalogue: React.FC<{ isAppBarVisible: boolean, canEditCatalogue:bool
     const {id } = useParams()
     const storeHasFoodURL = "/catalogue"
     const storeURL = "/store-profile"
+    const token = window.sessionStorage.getItem("token") || window.localStorage.getItem("token")
     const [catalogue, setCatalogue] = useState<StoreHasFood[]>([])
     const [selectedFood, setSelectedFood] = useState<FoodLocal|null>(null)
     const [store, setStore] = useState<StoreProfile | null>(null)
@@ -31,7 +32,7 @@ const StoreCatalogue: React.FC<{ isAppBarVisible: boolean, canEditCatalogue:bool
                 {
                     withCredentials: true,
                     headers: {
-                        Authorization: "Bearer " + window.localStorage.token
+                        Authorization: "Bearer " + token
                     }
                 }) 
                 .then( res => {
@@ -48,7 +49,7 @@ const StoreCatalogue: React.FC<{ isAppBarVisible: boolean, canEditCatalogue:bool
                 {
                     withCredentials: true,
                     headers: {
-                        Authorization: "Bearer " + window.localStorage.token
+                        Authorization: "Bearer " + token
                     }
                 }) 
                 .then( res => {
@@ -95,7 +96,7 @@ const StoreCatalogue: React.FC<{ isAppBarVisible: boolean, canEditCatalogue:bool
             {
                 withCredentials: true,
                 headers: {
-                    Authorization: "Bearer " + window.localStorage.token
+                    Authorization: "Bearer " + token
                 }
             }
         )
@@ -120,7 +121,7 @@ const StoreCatalogue: React.FC<{ isAppBarVisible: boolean, canEditCatalogue:bool
         api.delete(`${storeHasFoodURL}/bystoreandfood/${id}/${selectedFood?.id}`, {
             withCredentials: true,
             headers: {
-                Authorization: "Bearer " + window.localStorage.token
+                Authorization: "Bearer " + token
             }
         })
         .then((res) => {
@@ -180,7 +181,10 @@ const StoreCatalogue: React.FC<{ isAppBarVisible: boolean, canEditCatalogue:bool
                     }
                 </Typography>
             </Box>
-            
+            {canEditCatalogue && 
+                <Button variant='contained' onClick={()=>navigate("/search")}>
+                    Agregar productos
+                </Button>}
             { catalogue.map((item)=>{
                 return (
                 <Card key={item.foodLocalId} sx={{
