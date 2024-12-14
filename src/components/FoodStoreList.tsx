@@ -45,7 +45,6 @@ const FoodStoreList: React.FC<{ isAppBarVisible: boolean }> = ({ isAppBarVisible
         if (id){
             storesQueryParams += `&f=${id}`
         }
-        console.log(`${storesURL}${storesQueryParams}`)
         const fetchStores = api.get(`${storesURL}${storesQueryParams}`, {
             withCredentials: true,
             headers: {
@@ -62,9 +61,6 @@ const FoodStoreList: React.FC<{ isAppBarVisible: boolean }> = ({ isAppBarVisible
     
         Promise.all([fetchStores, fetchComments])
             .then(([storesResponse, commentsResponse]) => {
-                console.log("Stores:", storesResponse.data);
-                console.log("Comments:", commentsResponse.data);
-                console.log("store stats: ", storeStats)
                 const storesData = storesResponse.data;
                 const commentsData = commentsResponse.data;
                 setStores(storesData);

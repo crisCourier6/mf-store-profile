@@ -54,7 +54,6 @@ const StoreCatalogue: React.FC<{ isAppBarVisible: boolean, canEditCatalogue:bool
                 }) 
                 .then( res => {
                     setCatalogue(res.data)
-                    console.log(res.data)
                 })
                 .catch(error=>{
                     console.log(error)
@@ -107,7 +106,6 @@ const StoreCatalogue: React.FC<{ isAppBarVisible: boolean, canEditCatalogue:bool
                 }
                 return item
             }))
-            console.log(res.data)
         })
         .catch(error=>{
             console.log(error)

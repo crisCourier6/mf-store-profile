@@ -61,9 +61,6 @@ const StoreList: React.FC<{ isAppBarVisible: boolean }> = ({ isAppBarVisible }) 
     
         Promise.all([fetchStores, fetchComments])
             .then(([storesResponse, commentsResponse]) => {
-                console.log("Stores:", storesResponse.data);
-                console.log("Comments:", commentsResponse.data);
-                console.log("store stats: ", storeStats)
                 const storesData = storesResponse.data;
                 const commentsData = commentsResponse.data;
                 setStores(storesData);
