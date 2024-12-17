@@ -324,7 +324,7 @@ const StoreCatalogue: React.FC<{ isAppBarVisible: boolean, canEditCatalogue:bool
                 onClose={handleSnackbarClose}
                 sx={{bottom: "3vh"}}
                 >
-                <Alert onClose={handleSnackbarClose} severity={snackbarMsg.includes("Error")?"error":"success"} sx={{ width: '100%' }}>
+                <Alert variant="filled" onClose={handleSnackbarClose} severity={snackbarMsg.includes("Error")?"error":"success"} sx={{ width: '100%' }}>
                     {snackbarMsg}
                 </Alert>
             </Snackbar>  

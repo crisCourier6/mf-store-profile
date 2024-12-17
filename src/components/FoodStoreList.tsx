@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import api from '../api';
 import { Box, Card, CardContent, IconButton, Typography, Button, Dialog, DialogActions, 
-    DialogContent, SnackbarCloseReason, CardActions, DialogTitle } from '@mui/material';
+    DialogContent, CardActions, DialogTitle, CircularProgress } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import { CommentStore } from '../interfaces/CommentStore';
 import GradeRoundedIcon from '@mui/icons-material/GradeRounded';
@@ -36,6 +36,7 @@ const FoodStoreList: React.FC<{ isAppBarVisible: boolean }> = ({ isAppBarVisible
     const [selectedStore, setSelectedStore] = useState<StoreProfile | null>(null)
     const [selectedComments, setSelectedComments] = useState<CommentStore[]>([])
     const [scrollToComments, setScrollToComments] = useState(false)
+    const [loadingStores, setLoadingStores] = useState(false)
     const commentsQueryParams = "?wu=true&ws=true"
     
 
@@ -45,6 +46,7 @@ const FoodStoreList: React.FC<{ isAppBarVisible: boolean }> = ({ isAppBarVisible
         if (id){
             storesQueryParams += `&f=${id}`
         }
+        setLoadingStores(true)
         const fetchStores = api.get(`${storesURL}${storesQueryParams}`, {
             withCredentials: true,
             headers: {
@@ -102,9 +104,9 @@ const FoodStoreList: React.FC<{ isAppBarVisible: boolean }> = ({ isAppBarVisible
             .catch(error => {
                 console.error("Error fetching data:", error);
             })
-            // .finally(() => {
-            //     setAllDone(true); // Set the flag after both requests have completed
-            // });
+            .finally(() => {
+                setLoadingStores(false); // Set the flag after both requests have completed
+            });
         }
     }, [openList]);
 
@@ -238,7 +240,13 @@ const FoodStoreList: React.FC<{ isAppBarVisible: boolean }> = ({ isAppBarVisible
                             gap:1,
                         }}>
                 
-                            {storesFiltered.map((store)=>{
+                        {loadingStores
+                            ? <CircularProgress/> 
+                            : storesFiltered.length===0
+                                ?   <Typography variant='subtitle1' textAlign={"center"}>
+                                        Aún no hay tiendas con este alimento en su catálogo
+                                    </Typography>
+                                :   storesFiltered.map((store)=>{
                             const stats = storeStats[store.userId] || {
                                 recommendationCount: 0,
                                 totalComments: 0,

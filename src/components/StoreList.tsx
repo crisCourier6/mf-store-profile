@@ -289,7 +289,8 @@ const StoreList: React.FC<{ isAppBarVisible: boolean }> = ({ isAppBarVisible }) 
                 display:"flex",
                 flexDirection: "column"
                 }}>
-                    <CardContent sx={{
+                    <CardContent onClick={() => handleOpenStore(store)}
+                    sx={{
                     width:"100%",
                     height: "75%", 
                     display:"flex", 
@@ -297,6 +298,7 @@ const StoreList: React.FC<{ isAppBarVisible: boolean }> = ({ isAppBarVisible }) 
                     justifyContent: "center",
                     alignItems: "center",
                     padding:0,
+                    cursor: "pointer"
                     }}>
                         <Box sx={{
                             width:"100%", 
