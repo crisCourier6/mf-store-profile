@@ -249,6 +249,7 @@ const StoreList: React.FC<{ isAppBarVisible: boolean }> = ({ isAppBarVisible }) 
                     value={searchQuery}
                     onChange={handleSearchChange}
                     placeholder="Buscar por nombre"
+                    inputProps = {{maxLength: 100}}
                     variant="standard"
                     fullWidth
                     sx={{mt: 0.5, maxWidth: "60%"}}

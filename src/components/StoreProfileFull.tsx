@@ -379,6 +379,7 @@ const StoreProfileFull: React.FC<StoreProfileProps> = ({ store, comments, open, 
                 <DialogContent>
                     <TextField
                         fullWidth
+                        inputProps = {{maxLength: 500}}
                         label="Comentario"
                         value={editedContent}
                         onChange={(e) => setEditedContent(e.target.value)}
@@ -436,6 +437,7 @@ const StoreProfileFull: React.FC<StoreProfileProps> = ({ store, comments, open, 
                 <DialogContent>
                     <TextField
                         label="Comentario"
+                        inputProps = {{maxLength: 500}}
                         fullWidth
                         multiline
                         rows={4}
