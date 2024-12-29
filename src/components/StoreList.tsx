@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import api from '../api';
-import { Box, Card, CardContent, Grid, IconButton, Typography, Button, InputAdornment, TextField, SnackbarCloseReason, CardActions } from '@mui/material';
+import { Box, Card, CardContent, Grid, IconButton, Typography, Button, InputAdornment, TextField, SnackbarCloseReason, CardActions, Snackbar, Alert } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import { CircularProgress } from "@mui/material";
 import { CommentStore } from '../interfaces/CommentStore';
@@ -11,6 +11,7 @@ import CommentOutlinedIcon from '@mui/icons-material/CommentOutlined';
 import CommentRoundedIcon from '@mui/icons-material/CommentRounded';
 import { StoreProfile } from '../interfaces/StoreProfile';
 import StoreProfileFull from './StoreProfileFull';
+import NavigateBack from './NavigateBack';
 
 const StoreList: React.FC<{ isAppBarVisible: boolean }> = ({ isAppBarVisible }) => {
     const {id} = useParams()
@@ -37,7 +38,8 @@ const StoreList: React.FC<{ isAppBarVisible: boolean }> = ({ isAppBarVisible }) 
     const [selectedComments, setSelectedComments] = useState<CommentStore[]>([])
     const [scrollToComments, setScrollToComments] = useState(false)
     const commentsQueryParams = "?wu=true&ws=true"
-    
+    const [snackbarMsg, setSnackbarMsg] = useState("")
+    const [snackbarOpen, setSnackbarOpen] = useState(false)
 
     useEffect(() => {
         document.title = "Tiendas - EyesFood";
@@ -187,12 +189,25 @@ const StoreList: React.FC<{ isAppBarVisible: boolean }> = ({ isAppBarVisible }) 
         setSelectedStore(null);
     };
 
+    const handleSnackbarClose = (
+        event: React.SyntheticEvent | Event,
+        reason?: SnackbarCloseReason,
+      ) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+    
+        setSnackbarOpen(false);
+      }
+
     const updateComment = (updatedComment: CommentStore) => {
         setComments((prevComments) =>
             prevComments.map((comment) =>
                 comment.id === updatedComment.id ? updatedComment : comment
             )
         );
+        setSnackbarMsg("Comentario modificado!")
+        setSnackbarOpen(true)
     };
 
     // Function to delete a comment
@@ -200,10 +215,14 @@ const StoreList: React.FC<{ isAppBarVisible: boolean }> = ({ isAppBarVisible }) 
         setComments((prevComments) =>
             prevComments.filter((comment) => comment.id !== commentId)
         );
+        setSnackbarMsg("Comentario eliminado!")
+        setSnackbarOpen(true)
     };
 
     const newComment = (newComment: CommentStore) => {
         setComments(prevComments => [newComment, ...prevComments]);
+        setSnackbarMsg("Comentario creado!")
+        setSnackbarOpen(true)
     };
 
     return ( allDone?
@@ -224,20 +243,25 @@ const StoreList: React.FC<{ isAppBarVisible: boolean }> = ({ isAppBarVisible }) 
                     zIndex: 100,
                     boxShadow: 3,
                     display: "flex",
-                    flexDirection: "column",
+                    flexDirection: "row",
                     alignItems: "center",
                     borderBottom: "5px solid",
+                    borderLeft: "5px solid",
+                    borderRight: "5px solid",
+                    color: "primary.contrastText",
                     borderColor: "secondary.main",
                     boxSizing: "border-box"
                   }}
             >
-                <Typography variant='h5' width="100%"  color="primary.contrastText" sx={{py:1, borderLeft: "3px solid",
-                    borderRight: "3px solid",
-                    borderColor: "secondary.main",
-                    boxSizing: "border-box",
-                }}>
-                    Tiendas
-                </Typography>
+                <Box sx={{display: "flex", flex: 1}}>
+                    <NavigateBack/>
+                </Box>
+                <Box sx={{display: "flex", flex: 4}}>
+                    <Typography variant='h6' width="100%"  color="primary.contrastText" sx={{py:1}}>
+                        Tiendas
+                    </Typography>
+                </Box>
+                <Box sx={{display: "flex", flex: 1}}/>
             </Box>
             <Box sx={{
                 display: "flex",
@@ -252,7 +276,7 @@ const StoreList: React.FC<{ isAppBarVisible: boolean }> = ({ isAppBarVisible }) 
                     inputProps = {{maxLength: 100}}
                     variant="standard"
                     fullWidth
-                    sx={{mt: 0.5, maxWidth: "60%"}}
+                    sx={{mt: 0.5, maxWidth: "100%"}}
                     InputProps={{
                         endAdornment: (
                             searchQuery && (
@@ -387,7 +411,7 @@ const StoreList: React.FC<{ isAppBarVisible: boolean }> = ({ isAppBarVisible }) 
                                 <Typography variant="body2" color="primary.contrastText">{stats.totalComments}</Typography>
                                 
                             </Box>
-                            <Button onClick={() => handleOpenStore(store)} variant='text' sx={{color: "secondary.main", fontSize:12, padding:0}}>
+                            <Button onClick={() => handleOpenStore(store)} variant='text' sx={{color: "secondary.main", fontSize:14, padding:1}}>
                                 Ver perfil
                             </Button>
                         </Box>
@@ -405,6 +429,20 @@ const StoreList: React.FC<{ isAppBarVisible: boolean }> = ({ isAppBarVisible }) 
                 onNewComment={newComment}
                 scrollToComments = {scrollToComments} />
             )}
+            <Snackbar
+            open = {snackbarOpen}
+            autoHideDuration={6000}
+            onClose={handleSnackbarClose}
+            >
+                <Alert onClose={handleSnackbarClose} 
+                severity={snackbarMsg.includes("Error")?"error":"success"} 
+                variant="filled"
+                sx={{ 
+                    width: '100%'
+                }}>
+                    {snackbarMsg}
+                </Alert>
+            </Snackbar>  
    
         </Grid>
         

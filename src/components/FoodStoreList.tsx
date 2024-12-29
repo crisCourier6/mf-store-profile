@@ -11,6 +11,7 @@ import CommentRoundedIcon from '@mui/icons-material/CommentRounded';
 import { StoreProfile } from '../interfaces/StoreProfile';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import StoreProfileFull from './StoreProfileFull';
+import CloseIcon from '@mui/icons-material/Close';
 
 const FoodStoreList: React.FC<{ isAppBarVisible: boolean }> = ({ isAppBarVisible }) => {
     const [openList, setOpenList] = useState(false)
@@ -219,16 +220,31 @@ const FoodStoreList: React.FC<{ isAppBarVisible: boolean }> = ({ isAppBarVisible
             <Dialog 
                 open={openList} 
                 onClose={()=>setOpenList(false)} 
-                fullScreen
                 PaperProps={{
                     sx: {
+                        height: "auto",
                         maxHeight: '80vh', 
-                        width: "95vw",
-                        maxWidth: "500px"
+                        width: "100vw",
+                        maxWidth: "500px",
+                        margin: 0
                     }
                 }}>
-                    <DialogTitle sx={{bgcolor: "primary.dark", color: "primary.contrastText", textAlign: "center"}}>
-                        Tiendas
+                    <DialogTitle sx={{bgcolor: "primary.dark", color: "primary.contrastText"}}>
+                        <Box sx={{display:"flex", justifyContent: "space-between", alignItems: "flex-start", height:"100%"}}>
+                            <Typography variant="h6" textAlign={"center"} sx={{color: "primary.contrastText"}}>
+                                Tiendas
+                            </Typography>
+                            
+                            <Box sx={{display: "flex", flex:0.5, justifyContent: "flex-end"}}>
+                                <IconButton
+                                onClick={()=>setOpenList(false)}
+                                sx={{p:0}}
+                                >
+                                    <CloseIcon sx={{color: "primary.contrastText"}} />
+                                </IconButton>
+                            </Box>
+                        </Box>
+            
                     </DialogTitle>
                     <DialogContent dividers sx={{padding:1}}>
                         <Box sx={{ 
@@ -246,7 +262,7 @@ const FoodStoreList: React.FC<{ isAppBarVisible: boolean }> = ({ isAppBarVisible
                                 ?   <Typography variant='subtitle1' textAlign={"center"}>
                                         Aún no hay tiendas con este alimento en su catálogo
                                     </Typography>
-                                :   storesFiltered.map((store)=>{
+                                :   storesFiltered.map((store, index)=>{
                             const stats = storeStats[store.userId] || {
                                 recommendationCount: 0,
                                 totalComments: 0,
@@ -254,7 +270,7 @@ const FoodStoreList: React.FC<{ isAppBarVisible: boolean }> = ({ isAppBarVisible
                                 userHasRecommended: false,
                             };
                             return (
-                            <Card key={store.id} sx={{
+                            <Card key={index} sx={{
                             border: "4px solid", 
                             borderColor: "primary.dark", 
                             bgcolor: "primary.dark",
@@ -319,9 +335,6 @@ const FoodStoreList: React.FC<{ isAppBarVisible: boolean }> = ({ isAppBarVisible
                                         </Box>
                                             
                                     </Box>
-                                    
-                                    
-                        
                                 </CardContent>
                                 <CardActions sx={{padding:0, width:"100%", height: "25%"}}>
                                 <Box sx={{
@@ -370,14 +383,6 @@ const FoodStoreList: React.FC<{ isAppBarVisible: boolean }> = ({ isAppBarVisible
                         )})}
                         </Box>
                     </DialogContent>
-                    <DialogActions>
-                    <Button
-                        onClick={()=>setOpenList(false)}
-                        variant="contained"
-                    >
-                        Cerrar
-                    </Button>
-                </DialogActions>
             </Dialog>
 
             {selectedStore && (

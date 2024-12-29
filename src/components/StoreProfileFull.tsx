@@ -16,6 +16,8 @@ import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded';
 import { useNavigate } from 'react-router-dom';
 import { StoreHasFood } from '../interfaces/StoreHasFood';
+import CloseIcon from '@mui/icons-material/Close';
+import AddIcon from '@mui/icons-material/Add';
 
 interface StoreProfileProps {
     store: StoreProfile;
@@ -42,7 +44,7 @@ const StoreProfileFull: React.FC<StoreProfileProps> = ({ store, comments, open, 
     const [newCommentContent, setNewCommentContent] = useState("");
     const [isRecommended, setIsRecommended] = useState<null | boolean>(null);
     const [showCatalogue, setShowCatalogue] = useState(false)
-    const [expandedComments, setExpandedComments] = useState(false);
+    const [expandedComments, setExpandedComments] = useState(true);
     const commentsURL = "/comments-store"
     const commentsRef = useRef<HTMLDivElement>(null);
 
@@ -164,33 +166,48 @@ const StoreProfileFull: React.FC<StoreProfileProps> = ({ store, comments, open, 
                 maxWidth: "500px"
             }
         }}>
-            <DialogTitle sx={{padding:0.5, bgcolor: "primary.dark"}}>
-            <Box sx={{ 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: "center", 
-                    flexDirection: "column",
-                    gap: 0.5
-                }}>
-                   <Avatar
-                        alt={store.user?.name}
-                        sx={{ width: 64, height: 64, bgcolor :"transparent" }}
-                       
-                    >
-                        {store.user?.profilePic === "default_profile.png" ? (
-                            <NoPhotoIcon height={48} width={48} fill='white' /> // Render the icon when it's the default profile picture
-                        ) : (
-                            <img
-                                src={store.user?.profilePic}
-                                alt={store.user?.name}
-                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                            />
-                        )}
-                    </Avatar> 
-                    <Typography variant='h6' width="100%"  color="primary.contrastText" textAlign={"center"}>
-                        {store.user?.name}
-                    </Typography>
+            <DialogTitle sx={{bgcolor: "primary.dark"}}>
+                <Box sx={{display:"flex", justifyContent: "space-between", alignItems: "flex-start", height:"100%"}}>
+                    <Box sx={{display: "flex", flex:1}}>
+                        <Avatar
+                            alt={store.user?.name}
+                            sx={{ width: "100%", height: "auto", bgcolor :"transparent" }}
+                        
+                        >
+                            {store.user?.profilePic === "default_profile.png" ? (
+                                <NoPhotoIcon height={"100%"} width={"100%"} fill='white' /> // Render the icon when it's the default profile picture
+                            ) : (
+                                <img
+                                    src={store.user?.profilePic}
+                                    alt={store.user?.name}
+                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                />
+                            )}
+                        </Avatar> 
+                    </Box>
+                        <Box sx={{ 
+                        display: 'flex', 
+                        height: "100%",
+                        flex: 5,
+                        alignItems: 'center', 
+                        justifyContent: "center", 
+                        flexDirection: "column",
+                        gap: 0.5
+                    }}>
+                        <Typography variant='h6' width="100%"  color="primary.contrastText" textAlign={"center"}>
+                            {store.user?.name}
+                        </Typography>
+                    </Box>
+                    <Box sx={{display: "flex", flex:0.5, justifyContent: "flex-end"}}>
+                        <IconButton
+                        onClick={onClose}
+                        sx={{p:0}}
+                        >
+                            <CloseIcon sx={{color: "primary.contrastText"}} />
+                        </IconButton>
+                    </Box>
                 </Box>
+            
             </DialogTitle>
             <DialogContent dividers sx={{padding:1}}>
                 <Typography variant='h6'>
@@ -268,7 +285,6 @@ const StoreProfileFull: React.FC<StoreProfileProps> = ({ store, comments, open, 
                 <Typography variant="h6" onClick={toggleExpand} sx={{ cursor: 'pointer' }}>
                     Comentarios {expandedComments ? "▲" : "▼"}
                 </Typography>
-                {expandedComments && 
                 <Box ref={commentsRef} sx={{ 
                     display: 'flex', 
                     width: "100%",
@@ -277,9 +293,21 @@ const StoreProfileFull: React.FC<StoreProfileProps> = ({ store, comments, open, 
                     flexDirection: "column",
                     gap:1,
                 }}>
-                    {localComments.map(comment => {
+                    {
+                    expandedComments && currentUserId!=store.userId && <>
+                        <Button onClick={openCreateDialog} sx={{mt:1}}>
+                            <AddIcon/>
+                            <Typography variant='subtitle2' sx={{textDecoration: "underline"}}>
+                                Agregar comentario
+                            </Typography>
+                        </Button>
+                        </>
+                    }
+                    {expandedComments && 
+                
+                    localComments.map((comment, index) => {
                         return (
-                            <Box key={comment.id} sx={{ 
+                            <Box key={index} sx={{ 
                                 display: 'flex', 
                                 width: "100%",
                                 flexDirection: "column",
@@ -350,21 +378,8 @@ const StoreProfileFull: React.FC<StoreProfileProps> = ({ store, comments, open, 
                         )
                     })}
                 </Box>
-                }
+                
             </DialogContent>
-            <DialogActions>
-                {currentUserId!=store.userId && <>
-                <Button variant='contained' onClick={openCreateDialog}>
-                    Comentar
-                </Button>
-                </>}
-                <Button
-                    onClick={onClose}
-                    variant="contained"
-                >
-                    Cerrar
-                </Button>
-            </DialogActions>
             {/* Edit Comment Dialog */}
             <Dialog open={showEditDialog} onClose={() => setShowEditDialog(false)}
                 PaperProps={{
@@ -422,7 +437,7 @@ const StoreProfileFull: React.FC<StoreProfileProps> = ({ store, comments, open, 
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setShowDeleteDialog(false)}>Cancelar</Button>
-                    <Button onClick={handleDeleteComment} variant="contained" color="error">Borrar</Button>
+                    <Button onClick={handleDeleteComment} variant="contained">Borrar</Button>
                 </DialogActions>
             </Dialog>
             <Dialog open={showCreateDialog} onClose={closeCreateDialog}
@@ -491,8 +506,8 @@ const StoreProfileFull: React.FC<StoreProfileProps> = ({ store, comments, open, 
                     Catálogo de {store.user?.name}
                 </DialogTitle>
                 <DialogContent>
-                    {store.storeHasFood?.map((item:StoreHasFood) => {return (
-                        <Card key={item.foodLocalId} sx={{
+                    {store.storeHasFood?.map((item:StoreHasFood, index) => {return (
+                        <Card key={index} sx={{
                             border: "4px solid", 
                             borderColor: "primary.dark", 
                             bgcolor: "primary.contrastText",
