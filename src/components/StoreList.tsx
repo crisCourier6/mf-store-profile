@@ -43,7 +43,7 @@ const StoreList: React.FC<{ isAppBarVisible: boolean }> = ({ isAppBarVisible }) 
 
     useEffect(() => {
         document.title = "Tiendas - EyesFood";
-        let storesQueryParams = "?wu=true&wc=true"
+        let storesQueryParams = "?wu=true&wc=true&onlyactive=true"
         if (id){
             storesQueryParams += `&f=${id}`
         }
@@ -295,111 +295,116 @@ const StoreList: React.FC<{ isAppBarVisible: boolean }> = ({ isAppBarVisible }) 
             </Box>
             
             
-            { storesFiltered.map((store)=>{
-                const stats = storeStats[store.userId] || {
-                    recommendationCount: 0,
-                    totalComments: 0,
-                    userHasCommented: false,
-                    userHasRecommended: false,
-                };
-                return (
-                <Card key={store.id} sx={{
-                border: "4px solid", 
-                borderColor: "primary.dark", 
-                width:"95%", 
-                height: "auto",
-                display:"flex",
-                flexDirection: "column"
-                }}>
-                    <CardContent onClick={() => handleOpenStore(store)}
-                    sx={{
-                    width:"100%",
-                    height: "auto", 
-                    display:"flex", 
-                    flexDirection: "row", 
-                    justifyContent: "center",
-                    alignItems: "center",
-                    padding:0,
-                    cursor: "pointer"
+            { storesFiltered.length > 0
+                ? storesFiltered.map((store)=>{
+                    const stats = storeStats[store.userId] || {
+                        recommendationCount: 0,
+                        totalComments: 0,
+                        userHasCommented: false,
+                        userHasRecommended: false,
+                    };
+                    return (
+                    <Card key={store.id} sx={{
+                    border: "4px solid", 
+                    borderColor: "primary.dark", 
+                    width:"95%", 
+                    height: "auto",
+                    display:"flex",
+                    flexDirection: "column"
                     }}>
+                        <CardContent onClick={() => handleOpenStore(store)}
+                        sx={{
+                        width:"100%",
+                        height: "auto", 
+                        display:"flex", 
+                        flexDirection: "row", 
+                        justifyContent: "center",
+                        alignItems: "center",
+                        padding:0,
+                        cursor: "pointer"
+                        }}>
+                            <Box sx={{
+                                width:"100%", 
+                                height: "auto",
+                                display:"flex", 
+                                flexDirection: "column",
+                                justifyContent: "center",
+                                alignItems: "center"
+                            }}>
+                                <Typography 
+                                    variant="h6" 
+                                    color="secondary.contrastText" 
+                                    width="100%" 
+                                    sx={{alignContent:"center", 
+                                        borderBottom: "2px solid", 
+                                        borderColor: "primary.main", 
+                                        bgcolor: "secondary.main"}}
+                                    >
+                                    {store.user?.name}
+                                </Typography>
+                                <Typography 
+                                variant='subtitle2' 
+                                color= "primary.dark" 
+                                width="95%"
+                                sx={{
+                                    textAlign:"left", 
+                                    bgcolor: "primary.contrastText",
+                                    py:1
+                                }}>
+                                    {store.description}
+                                </Typography>          
+                            </Box>
+                        </CardContent>
+                        <CardActions sx={{padding:0, width:"100%"}}>
                         <Box sx={{
                             width:"100%", 
-                            height: "auto",
                             display:"flex", 
-                            flexDirection: "column",
-                            justifyContent: "center",
-                            alignItems: "center"
-                        }}>
-                            <Typography 
-                                variant="h6" 
-                                color="secondary.contrastText" 
-                                width="100%" 
-                                sx={{alignContent:"center", 
-                                    borderBottom: "2px solid", 
-                                    borderColor: "primary.main", 
-                                    bgcolor: "secondary.main"}}
-                                >
-                                {store.user?.name}
-                            </Typography>
-                            <Typography 
-                            variant='subtitle2' 
-                            color= "primary.dark" 
-                            width="95%"
-                            sx={{
-                                textAlign:"left", 
-                                bgcolor: "primary.contrastText",
-                                py:1
-                            }}>
-                                {store.description}
-                            </Typography>          
-                        </Box>
-                    </CardContent>
-                    <CardActions sx={{padding:0, width:"100%"}}>
-                    <Box sx={{
-                        width:"100%", 
-                        display:"flex", 
-                        height: "100%",
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        bgcolor: "primary.dark",
-                        }}>
-                            <Box sx={{
-                            display: "flex",
+                            height: "100%",
                             flexDirection: "row",
+                            justifyContent: "space-between",
                             alignItems: "center",
-                            justifyContent: "center",
-                            gap:0
+                            bgcolor: "primary.dark",
                             }}>
-                                <IconButton disabled={true}>
-                                {stats.userHasRecommended ? <GradeRoundedIcon sx={{color: "secondary.main", fontSize:18}} /> : <GradeOutlinedIcon sx={{color: "primary.contrastText", fontSize:18}}/>}
-                                </IconButton>
-                                <Typography variant="subtitle1" color="primary.contrastText">{stats.recommendationCount}</Typography>
-                            </Box>
-                            <Box sx={{
-                            display: "flex",
-                            flexDirection: "row",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            gap:0
-                            }}>
-                                <IconButton onClick={() => {
-                                    handleOpenStore(store)
-                                    setScrollToComments(true)
+                                <Box sx={{
+                                display: "flex",
+                                flexDirection: "row",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                gap:0
                                 }}>
-                                    {stats.userHasCommented ? <CommentRoundedIcon sx={{color: "secondary.main", fontSize:18}}/> : <CommentOutlinedIcon sx={{color: "primary.contrastText", fontSize:18}}/>}
-                                </IconButton>
-                                <Typography variant="body2" color="primary.contrastText">{stats.totalComments}</Typography>
-                                
+                                    <IconButton disabled={true}>
+                                    {stats.userHasRecommended ? <GradeRoundedIcon sx={{color: "secondary.main", fontSize:18}} /> : <GradeOutlinedIcon sx={{color: "primary.contrastText", fontSize:18}}/>}
+                                    </IconButton>
+                                    <Typography variant="subtitle1" color="primary.contrastText">{stats.recommendationCount}</Typography>
+                                </Box>
+                                <Box sx={{
+                                display: "flex",
+                                flexDirection: "row",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                gap:0
+                                }}>
+                                    <IconButton onClick={() => {
+                                        handleOpenStore(store)
+                                        setScrollToComments(true)
+                                    }}>
+                                        {stats.userHasCommented ? <CommentRoundedIcon sx={{color: "secondary.main", fontSize:18}}/> : <CommentOutlinedIcon sx={{color: "primary.contrastText", fontSize:18}}/>}
+                                    </IconButton>
+                                    <Typography variant="body2" color="primary.contrastText">{stats.totalComments}</Typography>
+                                    
+                                </Box>
+                                <Button onClick={() => handleOpenStore(store)} variant='text' sx={{color: "secondary.main", fontSize:14, padding:1}}>
+                                    Ver perfil
+                                </Button>
                             </Box>
-                            <Button onClick={() => handleOpenStore(store)} variant='text' sx={{color: "secondary.main", fontSize:14, padding:1}}>
-                                Ver perfil
-                            </Button>
-                        </Box>
-                    </CardActions>
-                </Card> 
-            )}
-        )}
+                        </CardActions>
+                    </Card> 
+                
+            )})
+                : <Typography variant='subtitle1'>
+                    No se econtraron tiendas    
+                </Typography>
+    }
             {selectedStore && (
                 <StoreProfileFull store={selectedStore} 
                 comments={selectedComments} 
