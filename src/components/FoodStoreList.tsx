@@ -124,12 +124,6 @@ const FoodStoreList: React.FC<{ isAppBarVisible: boolean }> = ({ isAppBarVisible
       }, [searchQuery, stores]);
 
     useEffect(()=>{
-        setTimeout(() => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }, 100); // Adjust the delay as needed
-    }, [storesFiltered])
-
-    useEffect(()=>{
         const stats: { [storeId: string]: any } = {};
         comments.forEach((comment: CommentStore) => {
             const storeId = comment.storeId;
@@ -259,7 +253,7 @@ const FoodStoreList: React.FC<{ isAppBarVisible: boolean }> = ({ isAppBarVisible
                         {loadingStores
                             ? <CircularProgress/> 
                             : storesFiltered.length===0
-                                ?   <Typography variant='subtitle1' textAlign={"center"}>
+                                ?   <Typography variant='subtitle1' textAlign={"center"} sx={{p:1}}>
                                         Aún no hay tiendas con este alimento en su catálogo
                                     </Typography>
                                 :   storesFiltered.map((store, index)=>{

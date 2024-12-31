@@ -306,18 +306,15 @@ const StoreList: React.FC<{ isAppBarVisible: boolean }> = ({ isAppBarVisible }) 
                 <Card key={store.id} sx={{
                 border: "4px solid", 
                 borderColor: "primary.dark", 
-                bgcolor: "primary.dark",
-                width:"90%", 
-                height: "20vh",
-                maxHeight: "120px", 
-                minHeight: "60px",
+                width:"95%", 
+                height: "auto",
                 display:"flex",
                 flexDirection: "column"
                 }}>
                     <CardContent onClick={() => handleOpenStore(store)}
                     sx={{
                     width:"100%",
-                    height: "75%", 
+                    height: "auto", 
                     display:"flex", 
                     flexDirection: "row", 
                     justifyContent: "center",
@@ -327,10 +324,11 @@ const StoreList: React.FC<{ isAppBarVisible: boolean }> = ({ isAppBarVisible }) 
                     }}>
                         <Box sx={{
                             width:"100%", 
-                            height: "100%",
+                            height: "auto",
                             display:"flex", 
                             flexDirection: "column",
-                            justifyContent: "flex-start",
+                            justifyContent: "center",
+                            alignItems: "center"
                         }}>
                             <Typography 
                                 variant="h6" 
@@ -346,34 +344,17 @@ const StoreList: React.FC<{ isAppBarVisible: boolean }> = ({ isAppBarVisible }) 
                             <Typography 
                             variant='subtitle2' 
                             color= "primary.dark" 
-                            width="100%"
-                            height="100%"
+                            width="95%"
                             sx={{
                                 textAlign:"left", 
-                                alignItems: "center", 
-                                justifyContent: "center", 
-                                display: "flex", 
-                                gap:1,
-                                height: "100%",
-                                bgcolor: "primary.contrastText"
+                                bgcolor: "primary.contrastText",
+                                py:1
                             }}>
                                 {store.description}
-                            </Typography>
-                            <Box sx={{
-                                width:"100%", 
-                                display:"flex", 
-                                flexDirection: "column",
-                                justifyContent: "center",
-                                bgcolor: "secondary.main"
-                            }}>     
-                            </Box>
-                                
+                            </Typography>          
                         </Box>
-                        
-                        
-            
                     </CardContent>
-                    <CardActions sx={{padding:0, width:"100%", height: "25%"}}>
+                    <CardActions sx={{padding:0, width:"100%"}}>
                     <Box sx={{
                         width:"100%", 
                         display:"flex", 
