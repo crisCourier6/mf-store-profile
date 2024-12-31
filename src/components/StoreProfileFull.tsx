@@ -2,7 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Dialog, DialogTitle, DialogContent, Typography, IconButton, Box, Avatar, DialogActions, 
     Button, Divider, Paper, TextField, FormControlLabel, Switch, Card, CardContent, CardMedia, 
     RadioGroup,
-    Radio} from '@mui/material';
+    Radio,
+    Checkbox} from '@mui/material';
 import api from '../api';
 import { StoreProfile } from '../interfaces/StoreProfile';
 import { CommentStore } from '../interfaces/CommentStore';
@@ -42,7 +43,7 @@ const StoreProfileFull: React.FC<StoreProfileProps> = ({ store, comments, open, 
     const [editedIsRecommended, setEditedIsRecommended] = useState(false);
     const [showCreateDialog, setShowCreateDialog] = useState(false);
     const [newCommentContent, setNewCommentContent] = useState("");
-    const [isRecommended, setIsRecommended] = useState<null | boolean>(null);
+    const [isRecommended, setIsRecommended] = useState<null | boolean>(false);
     const [showCatalogue, setShowCatalogue] = useState(false)
     const [expandedComments, setExpandedComments] = useState(true);
     const commentsURL = "/comments-store"
@@ -79,7 +80,9 @@ const StoreProfileFull: React.FC<StoreProfileProps> = ({ store, comments, open, 
                 .then(res => {
                     onUpdateComment(updatedComment)
                     setNewCommentContent("");  // Clear the input fields after creating
-                    setIsRecommended(null);
+                    setEditedContent("")
+                    setIsRecommended(false);
+                    setEditedIsRecommended(false)
                 })
                 .catch(error => {
                     console.log(error);
@@ -109,7 +112,11 @@ const StoreProfileFull: React.FC<StoreProfileProps> = ({ store, comments, open, 
     }
 
     const openCreateDialog = () => setShowCreateDialog(true);
-    const closeCreateDialog = () => setShowCreateDialog(false);
+    const closeCreateDialog = () => {
+        setNewCommentContent("")
+        setIsRecommended(false)
+        setShowCreateDialog(false)
+    }
 
     const handleCreateComment = () => {
         const newComment = {
@@ -128,7 +135,9 @@ const StoreProfileFull: React.FC<StoreProfileProps> = ({ store, comments, open, 
         }).then(res => {
             onNewComment(res.data);  // Call the parent's new comment function
             setNewCommentContent("");  // Clear the input fields after creating
-            setIsRecommended(null);
+            setEditedContent("")
+            setIsRecommended(false);
+            setEditedIsRecommended(false)
             closeCreateDialog();
         }).catch(error => {
             console.log(error);
@@ -384,45 +393,45 @@ const StoreProfileFull: React.FC<StoreProfileProps> = ({ store, comments, open, 
                 PaperProps={{
                     sx: {
                         maxHeight: '80vh', 
-                        width: "85vw",
-                        maxWidth: "450px"
+                        width: "100vw",
+                        maxWidth: "450px",
+                        margin: 0
                     }
                 }} 
             >
-                <DialogTitle>Editar Comentario</DialogTitle>
-                <DialogContent>
+                <DialogTitle>
+                    <Box sx={{display:"flex", justifyContent: "space-between"}}>
+                        Editar comentario
+                        <IconButton
+                        color="inherit"
+                        onClick={() => setShowEditDialog(false)}
+                        sx={{p:0}}
+                        >
+                            <CloseIcon />
+                        </IconButton>
+                    </Box>
+                </DialogTitle>
+                <DialogContent sx={{display: "flex", flexDirection: "column", alignItems: "center"}}>
                     <TextField
                         fullWidth
                         inputProps = {{maxLength: 500}}
                         label="Comentario"
                         value={editedContent}
+                        multiline
+                        rows={4}
                         onChange={(e) => setEditedContent(e.target.value)}
                         sx={{mt:2}}
                     />
-                    <RadioGroup
-                        value={
-                            editedIsRecommended
-                                ? "recommended"
-                                : "notRecommended"
-                        }
-                        onChange={(event) =>
-                            setEditedIsRecommended(event.target.value === "recommended")
-                        }
-                        row
-                    >
-                        <FormControlLabel
-                            value="recommended"
-                            control={<Radio />}
-                            label="Recomendado"
+                    <FormControlLabel
+                    control={
+                        <Checkbox
+                            checked={editedIsRecommended ?? false} // Handle null by defaulting to false
+                            onChange={(event) => setEditedIsRecommended(event.target.checked)}
                         />
-                        <FormControlLabel
-                            value="notRecommended"
-                            control={<Radio />}
-                            label="No recomendado"
-                        />
-                    </RadioGroup>
-                    <Box sx={{display:"flex", justifyContent: "flex-end", pt:2}}>
-                        <Button onClick={() => setShowEditDialog(false)}>Cancelar</Button>
+                    }
+                    label="Recomendado"
+                    />
+                    <Box sx={{display:"flex", justifyContent: "flex-end", pt:2, width: "100%"}}>
                         <Button onClick={handleUpdateComment} variant="contained" disabled={editedContent==""}>Guardar</Button>
                     </Box>
                 </DialogContent>
@@ -443,12 +452,25 @@ const StoreProfileFull: React.FC<StoreProfileProps> = ({ store, comments, open, 
             PaperProps={{
                 sx: {
                     maxHeight: '80vh', 
-                    width: "85vw",
-                    maxWidth: "450px"
+                    width: "100vw",
+                    maxWidth: "450px",
+                    margin: 0
                 }
             }} >
-                <DialogTitle>Nuevo comentario - {store.user?.name}</DialogTitle>
-                <DialogContent>
+                <DialogTitle>
+                    <Box sx={{display:"flex", justifyContent: "space-between"}}>
+                        Nuevo comentario - {store.user?.name}
+                        <IconButton
+                        color="inherit"
+                        onClick={closeCreateDialog}
+                        sx={{p:0}}
+                        >
+                            <CloseIcon />
+                        </IconButton>
+                    </Box>
+                    
+                </DialogTitle>
+                <DialogContent  sx={{display: "flex", flexDirection: "column", alignItems: "center"}}>
                     <TextField
                         label="Comentario"
                         inputProps = {{maxLength: 500}}
@@ -459,33 +481,17 @@ const StoreProfileFull: React.FC<StoreProfileProps> = ({ store, comments, open, 
                         onChange={(e) => setNewCommentContent(e.target.value)}
                         sx={{mt:2}}
                     />
-                    <RadioGroup
-                        value={
-                            isRecommended === null
-                                ? "" // No option is selected initially
-                                : isRecommended
-                                ? "recommended"
-                                : "notRecommended"
-                        }
-                        onChange={(event) =>
-                            setIsRecommended(event.target.value === "recommended")
-                        }
-                        row
-                    >
-                        <FormControlLabel
-                            value="recommended"
-                            control={<Radio />}
-                            label="Recomendado"
+                   <FormControlLabel
+                    control={
+                        <Checkbox
+                            checked={isRecommended ?? false} // Handle null by defaulting to false
+                            onChange={(event) => setIsRecommended(event.target.checked)}
                         />
-                        <FormControlLabel
-                            value="notRecommended"
-                            control={<Radio />}
-                            label="No recomendado"
-                        />
-                    </RadioGroup>
-                    <Box sx={{display:"flex", justifyContent: "flex-end", pt:2}}>
-                        <Button onClick={closeCreateDialog}>Cancelar</Button>
-                        <Button onClick={handleCreateComment} variant="contained" color="primary" disabled={newCommentContent===" " || isRecommended===null}>
+                    }
+                    label="Recomendado"
+                    />
+                    <Box sx={{display:"flex", justifyContent: "flex-end", pt:2, width: "100%"}}>
+                        <Button onClick={handleCreateComment} variant="contained" color="primary" disabled={newCommentContent===""}>
                             Guardar
                         </Button>
                     </Box>
