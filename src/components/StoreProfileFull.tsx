@@ -53,7 +53,6 @@ const StoreProfileFull: React.FC<StoreProfileProps> = ({ store, comments, open, 
     }, [comments]);
 
     useEffect(() => {
-        console.log(open, scrollToComments, commentsRef)
         if (open && scrollToComments) {
             setExpandedComments(true)
             // Scroll to the comments section when the ExpertProfile opens
