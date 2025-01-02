@@ -2,14 +2,14 @@ import React from "react";
 import "./App.css";
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 
-import Profile from "./components/Profile";
+import StoreList from "./components/StoreList";
 
 function App() {
   return (
     <div className="App">
       <Router basename="mf-store-profile">
           <Routes>
-              <Route path="/profile" element={<Profile />}/>
+              <Route path="/profile" element={<StoreList isAppBarVisible={false} />}/>
           </Routes>
         
       </Router>
